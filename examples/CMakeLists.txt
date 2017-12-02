@@ -77,6 +77,7 @@ set(EXAMPLES
 	scenerendering
 	screenshot
 	shadowmapping
+	shadowmappingcascade
 	shadowmappingomni
 	skeletalanimation
 	specializationconstants
