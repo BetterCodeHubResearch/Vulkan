@@ -7,12 +7,18 @@ layout (location = 1) in vec3 inColor;
 layout (location = 2) in vec3 inViewVec;
 layout (location = 3) in vec3 inLightVec;
 layout (location = 4) in vec4 inShadowCoord;
+layout (location = 5) in vec3 inViewPos;
 
 layout (constant_id = 0) const int enablePCF = 0;
 
 layout (location = 0) out vec4 outFragColor;
 
 #define ambient 0.1
+#define SHADOW_MAP_CASCADE_COUNT 4
+
+layout (binding = 2) uniform UBO {
+	vec4 cascadeSplits;
+} ubo;
 
 float textureProj(vec4 P, vec2 off)
 {
@@ -65,4 +71,10 @@ void main()
 
 	outFragColor = vec4(diffuse * shadow, 1.0);
 
+	uint cascadeIndex = 0;
+	for(uint i = 0; i < SHADOW_MAP_CASCADE_COUNT - 1; ++i) {
+		if(inViewPos.z < ubo.cascadeSplits[i]) {	
+			cascadeIndex = i + 1;
+		}
+	}
 }
